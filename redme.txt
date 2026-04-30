@@ -1,0 +1,29 @@
+# Sistema de Caché Distribuida con Redis 
+
+##Tecnologías Utilizadas
+
+* **Python 3.9+**
+* **Redis** (Motor de almacenamiento en memoria)
+* **Docker & Docker Compose** 
+* **Redis Insight** (Visualización y monitoreo)
+
+## Arquitectura del Sistema
+
+El sistema consta de 4 servicios principales:
+1. **Traffic Generator:** Simula peticiones de usuarios.
+2. **Cache Service (Middleware):** Gestiona la lógica de búsqueda y almacenamiento en Redis.
+3. **Response Generator:** Simula un backend de procesamiento de datos pesado.
+4. **Redis:** Almacén de datos clave-valor.
+
+##Instrucciones de Ejecución
+
+Debemos levantar todo basicamente con un solo codigo
+
+    docker-compose up --building
+
+Luego a la hora de querer cambiar la politica de eviccion, el temaño y/o de distribucion
+debemos bajar el sistema con
+
+    docker-compose down
+
+Para luego volver a levantarlo con el codigo anterior.

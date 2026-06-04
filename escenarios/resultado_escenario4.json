@@ -1,0 +1,22 @@
+{
+    "dlq_rate": 0.0033,
+    "elapsed_seconds": 78.65,
+    "hit_latency_p50": 0.014826774597167969,
+    "hit_latency_p95": 0.022855520248413086,
+    "hit_rate": 1.0,
+    "hits": 607,
+    "latency_p50": 0.014826774597167969,
+    "latency_p95": 0.022855520248413086,
+    "miss_latency_p50": 0,
+    "miss_latency_p95": 0,
+    "misses": 0,
+    "recovery_rate": 0.0,
+    "recovery_time_p50": 0,
+    "recovery_time_p95": 0,
+    "retry_rate": 0.0099,
+    "throughput_rps": 7.7176,
+    "total_dlq": 2,
+    "total_processed": 607,
+    "total_recovered": 0,
+    "total_retries": 6
+}

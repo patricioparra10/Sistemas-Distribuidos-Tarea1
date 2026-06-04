@@ -1,29 +1,127 @@
-# Sistema de Caché Distribuida con Redis 
+# Sistema de Procesamiento Asíncrono con Apache Kafka
 
-##Tecnologías Utilizadas
+## Descripción General
 
-* **Python 3.9+**
-* **Redis** (Motor de almacenamiento en memoria)
-* **Docker & Docker Compose** 
-* **Redis Insight** (Visualización y monitoreo)
+Esta tarea implementa una arquitectura distribuida basada en Apache Kafka para el procesamiento de consultas geoespaciales sobre el dataset Google Open Buildings.
+
+La solución extiende la arquitectura desarrollada en la Tarea 1 incorporando mensajería asíncrona, reintentos automáticos y una Dead Letter Queue (DLQ), permitiendo mejorar la tolerancia a fallos y el manejo de cargas elevadas.
+
+El sistema utiliza Redis como caché para reducir la cantidad de consultas que requieren procesamiento completo y Kafka como mecanismo de desacoplamiento entre productores y consumidores.
+
+---
+
+## Tecnologías Utilizadas
+
+* **Python 3.11**
+* **Apache Kafka**
+* **Apache ZooKeeper**
+* **Redis 7**
+* **Flask**
+* **Docker**
+* **Docker Compose**
+* **kafka-python**
+---
 
 ## Arquitectura del Sistema
 
-El sistema consta de 4 servicios principales:
-1. **Traffic Generator:** Simula peticiones de usuarios.
-2. **Cache Service (Middleware):** Gestiona la lógica de búsqueda y almacenamiento en Redis.
-3. **Response Generator:** Simula un backend de procesamiento de datos pesado.
-4. **Redis:** Almacén de datos clave-valor.
+El sistema está compuesto por los siguientes servicios:
 
-##Instrucciones de Ejecución
+# 1. Traffic Generator
 
-Debemos levantar todo basicamente con un solo codigo
+Genera consultas aleatorias y las publica en Kafka mediante un Producer.
 
-    docker-compose up --building
+# 2. Kafka Consumer
 
-Luego a la hora de querer cambiar la politica de eviccion, el temaño y/o de distribucion
-debemos bajar el sistema con
+Consume consultas desde Kafka, consulta el caché y coordina el procesamiento de las solicitudes.
 
-    docker-compose down
+# 3. Cache Service
 
-Para luego volver a levantarlo con el codigo anterior.
+Gestiona la comunicación con Redis y almacena respuestas previamente calculadas.
+
+# 4. Response Generator
+
+Procesa consultas sobre el dataset y genera respuestas cuando no existe información en caché.
+
+# 5. Metrics Service
+
+Registra eventos, latencias, throughput, cache hits, retries y consultas enviadas a la DLQ.
+
+# 6. Redis
+
+Almacena respuestas cacheadas para acelerar consultas repetidas.
+
+# 7. Apache Kafka
+
+Gestiona la mensajería asíncrona entre productores y consumidores.
+
+# 8. Apache ZooKeeper
+
+Permite la coordinación y administración de Kafka.
+
+--
+
+## Flujo de Procesamiento
+1. El Traffic Generator genera una consulta.
+2. La consulta es enviada al tópico `queries`.
+3. Un consumidor Kafka recibe la consulta.
+4. Se consulta el servicio de caché.
+5. Si existe un cache hit, la respuesta se retorna inmediatamente.
+6. Si existe un cache miss, se consulta el Response Generator.
+7. Si ocurre una falla, la consulta es reenviada a `queries-retry`.
+8. Si se supera el máximo de reintentos, la consulta se envía a `queries-dlq`.
+9. Todos los eventos son registrados por el servicio de métricas.
+
+---
+
+## Instrucciones de Ejecución
+
+Para levantar todos los servicios:
+
+#bash
+docker-compose up --build
+
+Para detener el sistema:
+
+#bash
+docker-compose down
+
+
+---
+
+## Ejecución de Escenarios
+
+Para ejecutar todos los escenarios de evaluación:
+
+#bash
+bash escenarios/correr_todo.sh
+
+
+También es posible ejecutar cada escenario individualmente:
+
+#bash
+bash escenarios/kafka_1consumer.sh
+bash escenarios/kafka_consumers.sh
+bash escenarios/kafka_fail.sh
+bash escenarios/kafka_reintento.sh
+bash escenarios/kafka_spike.sh
+bash escenarios/kafka_recuperacion.sh
+
+---
+
+## Configuración
+
+La aplicación permite modificar distintos parámetros mediante variables de entorno:
+
+* Política de caché Redis.
+* Tamaño máximo de memoria.
+* TTL de las entradas.
+* Distribución de tráfico (Uniforme o Zipf).
+* Número de consumidores Kafka.
+* Tasa de fallos simulada.
+* Latencia artificial.
+
+# bash
+docker-compose down
+docker-compose up --build
+---
+

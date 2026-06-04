@@ -1,0 +1,22 @@
+{
+    "dlq_rate": 0.0,
+    "elapsed_seconds": 53.39,
+    "hit_latency_p50": 0.014291048049926758,
+    "hit_latency_p95": 0.02134561538696289,
+    "hit_rate": 0.9628,
+    "hits": 699,
+    "latency_p50": 0.014412164688110352,
+    "latency_p95": 0.02510237693786621,
+    "miss_latency_p50": 0.025566816329956055,
+    "miss_latency_p95": 0.061217546463012695,
+    "misses": 27,
+    "recovery_rate": 0.0,
+    "recovery_time_p50": 0,
+    "recovery_time_p95": 0,
+    "retry_rate": 0.0,
+    "throughput_rps": 13.5972,
+    "total_dlq": 0,
+    "total_processed": 726,
+    "total_recovered": 0,
+    "total_retries": 0
+}

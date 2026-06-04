@@ -1,0 +1,14 @@
+{
+    "escenario": "Recuperaci\u00f3n ante Fallos (Comparativa Tarea 1 vs Tarea 2)",
+    "arquitectura_sincrona_t1": {
+        "consultas_enviadas": 100,
+        "consultas_exitosas": 100,
+        "consultas_perdidas": 0,
+        "tasa_perdida_porcentaje": 0.0
+    },
+    "arquitectura_kafka_t2": {
+        "consultas_procesadas": 327,
+        "consultas_recuperadas_tras_falla": 0,
+        "consultas_enviadas_dlq": 1
+    }
+}
